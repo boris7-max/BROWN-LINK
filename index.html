@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мультитул</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Контент -->
+        <main class="content">
+            <!-- Страница Standoff -->
+            <section id="standoff-page" class="page active">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-gamepad"></i>
+                        <h2>Standoff 2</h2>
+                    </div>
+                    <p class="card-description">Быстрый запуск игры</p>
+                    <input type="text" id="standoff-text" placeholder="Введите заметку (необязательно)" class="input">
+                    <button class="btn btn-orange" id="standoff-btn">
+                        <i class="fas fa-play"></i> Открыть Standoff 2
+                    </button>
+                </div>
+            </section>
+
+            <!-- Страница Ссылки -->
+            <section id="links-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-link"></i>
+                        <h2>Фейковые ссылки</h2>
+                    </div>
+                    <p class="card-description">Генератор ссылок для тестов</p>
+                    <select id="platform-select" class="select">
+                        <option value="youtube">YouTube</option>
+                        <option value="telegram">Telegram</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                    </select>
+                    <button class="btn btn-purple" id="generate-link-btn">
+                        <i class="fas fa-magic"></i> Сгенерировать ссылку
+                    </button>
+                    <div id="link-result" class="result hidden">
+                        <code id="generated-link"></code>
+                        <button class="btn-copy" id="copy-link-btn">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Страница MD5 -->
+            <section id="md5-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-hashtag"></i>
+                        <h2>MD5 Генератор</h2>
+                    </div>
+                    <p class="card-description">Создание MD5 хэша</p>
+                    <input type="text" id="md5-text" placeholder="Введите текст для хэша" class="input">
+                    <button class="btn btn-green" id="generate-md5-btn">
+                        <i class="fas fa-bolt"></i> Сгенерировать MD5
+                    </button>
+                    <div id="md5-result" class="result hidden">
+                        <code id="generated-md5"></code>
+                        <button class="btn-copy" id="copy-md5-btn">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Страница История -->
+            <section id="history-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-history"></i>
+                        <h2>История действий</h2>
+                    </div>
+                    <div class="history-controls">
+                        <button class="btn btn-small" id="clear-history-btn">
+                            <i class="fas fa-trash"></i> Очистить историю
+                        </button>
+                        <button class="btn btn-small" id="refresh-history-btn">
+                            <i class="fas fa-sync"></i> Обновить
+                        </button>
+                    </div>
+                    <div id="history-list" class="history-list">
+                        <p class="empty-history">История пуста</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Страница О проекте -->
+            <section id="about-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h2>О проекте</h2>
+                    </div>
+                    <div class="about-content">
+                        <p>Это простой мультитул с базовыми функциями:</p>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Запуск Standoff 2</li>
+                            <li><i class="fas fa-check"></i> Генератор фейковых ссылок</li>
+                            <li><i class="fas fa-check"></i> MD5 хэширование</li>
+                            <li><i class="fas fa-check"></i> История действий</li>
+                        </ul>
+                        <p>Проект создан на чистом HTML, CSS и JavaScript.</p>
+                        <p>Для публикации на GitHub Pages просто залейте файлы в репозиторий.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Нижняя навигация -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-page="standoff-page">
+                <i class="fas fa-gamepad"></i>
+                <span>Standoff</span>
+            </button>
+            <button class="nav-btn" data-page="links-page">
+                <i class="fas fa-link"></i>
+                <span>Ссылки</span>
+            </button>
+            <button class="nav-btn" data-page="md5-page">
+                <i class="fas fa-hashtag"></i>
+                <span>MD5</span>
+            </button>
+            <button class="nav-btn" data-page="history-page">
+                <i class="fas fa-history"></i>
+                <span>История</span>
+            </button>
+            <button class="nav-btn" data-page="about-page">
+                <i class="fas fa-info-circle"></i>
+                <span>О нас</span>
+            </button>
+        </nav>
+
+        <!-- Уведомления -->
+        <div id="toast" class="toast hidden">
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
