@@ -18,10 +18,10 @@
                         <i class="fas fa-gamepad"></i>
                         <h2>Standoff 2</h2>
                     </div>
-                    <p class="card-description">Авторизация по токену</p>
-                    <input type="text" id="standoff-text" placeholder="Введите токен" class="input">
+                    <p class="card-description">Эмулятор запуска игры</p>
+                    <input type="text" id="standoff-text" placeholder="Введите заметку (необязательно)" class="input">
                     <button class="btn btn-orange" id="standoff-btn">
-                        <i class="fas fa-play"></i> Авторизовать Токен
+                        <i class="fas fa-play"></i> Запустить Standoff 2
                     </button>
                 </div>
             </section>
@@ -33,7 +33,7 @@
                         <i class="fas fa-link"></i>
                         <h2>Фейковые ссылки</h2>
                     </div>
-                    <p class="card-description">Генератор ссылок для скама</p>
+                    <p class="card-description">Генератор ссылок для тестов</p>
                     <select id="platform-select" class="select">
                         <option value="youtube">YouTube</option>
                         <option value="telegram">Telegram</option>
@@ -57,12 +57,12 @@
                 <div class="card">
                     <div class="card-header">
                         <i class="fas fa-hashtag"></i>
-                        <h2>Конвертирование Токенов</h2>
+                        <h2>MD5 Генератор</h2>
                     </div>
-                    <p class="card-description">Создание Токенов</p>
-                    <input type="text" id="md5-text" placeholder="Введите ссылку для конвертв" class="input">
+                    <p class="card-description">Создание MD5 хэша</p>
+                    <input type="text" id="md5-text" placeholder="Введите текст для хэша" class="input">
                     <button class="btn btn-green" id="generate-md5-btn">
-                        <i class="fas fa-bolt"></i> Сгенерировать Токен
+                        <i class="fas fa-bolt"></i> Сгенерировать MD5
                     </button>
                     <div id="md5-result" class="result hidden">
                         <code id="generated-md5"></code>
@@ -102,18 +102,14 @@
                         <h2>О проекте</h2>
                     </div>
                     <div class="about-content">
-                        <p>Лутшая скам ссылка в мире:</p>
+                        <p>Это простой мультитул с базовыми функциями:</p>
                         <ul>
-                            <li><i class="fas fa-check"></i> Авторизация по токену</li>
+                            <li><i class="fas fa-check"></i> Эмулятор запуска Standoff 2</li>
                             <li><i class="fas fa-check"></i> Генератор фейковых ссылок</li>
-                            <li><i class="fas fa-check"></i> Токен конвертер</li>
+                            <li><i class="fas fa-check"></i> MD5 хэширование</li>
                             <li><i class="fas fa-check"></i> История действий</li>
-                            <li><i class="fas fa-check"></i> Постоянные обновления</li>
-                            <li><i class="fas fa-check"></i> Версия игры 0.36.1</li>
                         </ul>
-                        <p>Проект создан групой BROWN LINK</p>
-                        <p>Телеграм Канал : @brown_link</p>
-                        <p>Создатели : kazay_new & @brown_tme</p>
+                        <p>Проект создан на чистом HTML, CSS и JavaScript.</p>
                     </div>
                 </div>
             </section>
@@ -131,7 +127,7 @@
             </button>
             <button class="nav-btn" data-page="md5-page">
                 <i class="fas fa-hashtag"></i>
-                <span>Токен</span>
+                <span>MD5</span>
             </button>
             <button class="nav-btn" data-page="history-page">
                 <i class="fas fa-history"></i>
@@ -143,6 +139,40 @@
             </button>
         </nav>
 
+        <!-- Алерт успешного инжекта -->
+        <div id="inject-alert" class="alert-overlay hidden">
+            <div class="alert-card">
+                <div class="alert-header">
+                    <div class="alert-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Инжект успешен!</h3>
+                </div>
+                <div class="alert-body">
+                    <p>Standoff 2 успешно запущен с инжектом.</p>
+                    <div class="alert-info">
+                        <div class="info-item">
+                            <span class="info-label">Статус:</span>
+                            <span class="info-value success-text">✓ Активен</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Версия:</span>
+                            <span class="info-value">v2.4.1</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Время:</span>
+                            <span class="info-value" id="inject-time"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert-footer">
+                    <button class="btn btn-purple" id="close-alert-btn">
+                        <i class="fas fa-times"></i> Закрыть
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Уведомления -->
         <div id="toast" class="toast hidden">
             <span id="toast-message"></span>
@@ -151,5 +181,4 @@
 
     <script src="script.js"></script>
 </body>
-
 </html>
