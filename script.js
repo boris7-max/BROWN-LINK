@@ -110,7 +110,7 @@ function initMainApp() {
     
     // Показываем приветственное уведомление
     setTimeout(() => {
-        showToast('Мультитул успешно загружен!');
+        showToast('Готово к работе');
     }, 500);
 }
 
@@ -391,3 +391,4 @@ function showToast(message) {
         toast.classList.add('hidden');
     }, 3000);
 }
+
