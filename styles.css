@@ -58,6 +58,7 @@ body {
 /* ===== КОНТЕНТ ===== */
 .content {
     margin-bottom: 1rem;
+    padding-top: 40px;
 }
 
 .page {
@@ -563,3 +564,4 @@ body {
         font-size: 1rem;
     }
 }
+
