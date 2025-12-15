@@ -8,7 +8,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
+    <!-- Прелоадер при загрузке сайта -->
+    <div id="site-loader" class="site-loader-overlay">
+        <div class="loader-card">
+            <div class="loader-animation">
+                <!-- From Uiverse.io by JaydipPrajapati1910 -->
+                <div class="loader">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <h3>Загрузка Мультитула...</h3>
+            <p class="loader-subtitle">Инициализация систем</p>
+            <div class="loader-steps">
+                <div class="step active">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Загрузка интерфейса</span>
+                </div>
+                <div class="step">
+                    <i class="fas fa-spinner"></i>
+                    <span>Подготовка инструментов</span>
+                </div>
+                <div class="step">
+                    <i class="fas fa-spinner"></i>
+                    <span>Инициализация токенов</span>
+                </div>
+                <div class="step">
+                    <i class="fas fa-spinner"></i>
+                    <span>Запуск генераторов</span>
+                </div>
+            </div>
+            <div class="loader-progress">
+                <div class="progress-bar" id="site-progress"></div>
+            </div>
+            <p class="loader-timer" id="site-loader-timer">0%</p>
+        </div>
+    </div>
+
+    <div class="container" id="main-content" style="display: none;">
         <!-- Контент -->
         <main class="content">
             <!-- Страница Standoff -->
@@ -186,5 +226,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
