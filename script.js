@@ -36,35 +36,55 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('copy-md5-btn').addEventListener('click', copyMD5);
     document.getElementById('clear-history-btn').addEventListener('click', clearHistory);
     document.getElementById('refresh-history-btn').addEventListener('click', loadHistory);
+    document.getElementById('close-alert-btn').addEventListener('click', closeAlert);
 });
 
 // ===== ПЕРЕМЕННЫЕ =====
 let history = JSON.parse(localStorage.getItem('multitool_history') || '[]');
 
-// ===== STANDOFF =====
+// ===== STANDOFF (ОБНОВЛЕННЫЙ) =====
 function handleStandoff() {
     const text = document.getElementById('standoff-text').value.trim();
-    const displayText = text || 'Запуск Standoff 2';
+    const displayText = text || 'Запуск Standoff 2 с инжектом';
     
     // Добавляем в историю
     addToHistory(displayText, 'standoff');
     
-    // Пытаемся открыть игру
-    const deepLink = 'standoff2://';
-    const storeLink = 'https://play.google.com/store/apps/details?id=com.axlebolt.standoff2';
+    // Показываем алерт успешного инжекта
+    showInjectAlert();
     
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = deepLink;
-    document.body.appendChild(iframe);
-    
-    setTimeout(() => {
-        document.body.removeChild(iframe);
-        window.open(storeLink, '_blank');
-    }, 1000);
-    
-    showToast('Пытаемся открыть Standoff 2...');
+    // Очищаем поле ввода
     document.getElementById('standoff-text').value = '';
+}
+
+function showInjectAlert() {
+    const alert = document.getElementById('inject-alert');
+    const timeElement = document.getElementById('inject-time');
+    
+    // Устанавливаем текущее время
+    const now = new Date();
+    timeElement.textContent = now.toLocaleTimeString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    
+    // Показываем алерт
+    alert.classList.remove('hidden');
+    
+    // Блокируем прокрутку
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAlert() {
+    const alert = document.getElementById('inject-alert');
+    alert.classList.add('hidden');
+    
+    // Восстанавливаем прокрутку
+    document.body.style.overflow = 'auto';
+    
+    // Показываем уведомление
+    showToast('Инжект завершен');
 }
 
 // ===== ССЫЛКИ =====
