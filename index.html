@@ -8,8 +8,47 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Система входа по ключу -->
+    <div id="key-system" class="key-system-overlay">
+        <div class="key-card">
+            <div class="key-header">
+                <i class="fas fa-key"></i>
+                <h2>Доступ к Мультитулу</h2>
+            </div>
+            <p class="key-description">Введите ключ для доступа к инструментам</p>
+            
+            <div class="key-input-group">
+                <input type="password" id="key-input" placeholder="Введите ключ доступа" class="key-input">
+                <button class="key-show-btn" id="show-key-btn">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            
+            <button class="btn btn-purple" id="submit-key-btn">
+                <i class="fas fa-unlock"></i> Разблокировать доступ
+            </button>
+            
+            <div class="key-hint">
+                <i class="fas fa-info-circle"></i>
+                <span>Для получения ключа обратитесь к @kazay_new или @brown_tme</span>
+            </div>
+            
+            <div class="key-attempts">
+                <p id="attempts-counter">Попыток осталось: <span>3</span></p>
+                <div class="attempts-bar">
+                    <div class="attempts-progress" id="attempts-progress"></div>
+                </div>
+            </div>
+            
+            <div class="key-warning hidden" id="key-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Неверный ключ! Проверьте правильность ввода.</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Прелоадер при загрузке сайта -->
-    <div id="site-loader" class="site-loader-overlay">
+    <div id="site-loader" class="site-loader-overlay hidden">
         <div class="loader-card">
             <div class="loader-animation">
                 <!-- From Uiverse.io by JaydipPrajapati1910 -->
@@ -21,24 +60,24 @@
                     <div></div>
                 </div>
             </div>
-            <h3>Загрузка Скам Ссылки...</h3>
+            <h3>Загрузка Мультитула...</h3>
             <p class="loader-subtitle">Инициализация систем</p>
             <div class="loader-steps">
                 <div class="step active">
                     <i class="fas fa-spinner fa-spin"></i>
+                    <span>Проверка лицензии</span>
+                </div>
+                <div class="step">
+                    <i class="fas fa-spinner"></i>
                     <span>Загрузка интерфейса</span>
                 </div>
                 <div class="step">
                     <i class="fas fa-spinner"></i>
-                    <span>Подключение Устройства</span>
+                    <span>Подготовка инструментов</span>
                 </div>
                 <div class="step">
                     <i class="fas fa-spinner"></i>
-                    <span>Подключение Серверов</span>
-                </div>
-                <div class="step">
-                    <i class="fas fa-spinner"></i>
-                    <span>Подключение к АПК</span>
+                    <span>Запуск генераторов</span>
                 </div>
             </div>
             <div class="loader-progress">
@@ -142,18 +181,36 @@
                         <h2>О проекте</h2>
                     </div>
                     <div class="about-content">
+                        <div class="license-info">
+                            <div class="license-item">
+                                <span class="license-label">Лицензия:</span>
+                                <span class="license-value active" id="license-status">Активна</span>
+                            </div>
+                            <div class="license-item">
+                                <span class="license-label">Ключ:</span>
+                                <span class="license-value" id="user-key">XXXX-XXXX-XXXX</span>
+                            </div>
+                            <div class="license-item">
+                                <span class="license-label">Истекает:</span>
+                                <span class="license-value" id="expire-date">31.12.2025</span>
+                            </div>
+                        </div>
+                        
                         <p>Лутшая сам ссылка в мире предоставляет:</p>
                         <ul>
                             <li><i class="fas fa-check"></i> Вход по токену в SO2</li>
                             <li><i class="fas fa-check"></i> Генератор фэйковых ссылок</li>
                             <li><i class="fas fa-check"></i> Конверт ссылок в токен</li>
-                            <li><i class="fas fa-check"></i> История действий (чтобы не потерять токен)</li>
-                            <li><i class="fas fa-check"></i> Постоянные обновления на дистанции</li>
+                            <li><i class="fas fa-check"></i> История действий</li>
+                            <li><i class="fas fa-check"></i> Постоянные обновления</li>
                             <li><i class="fas fa-check"></i> Версия игры 0.36.1</li>
                             <li><i class="fas fa-check"></i> Последний апдэйт 15.12.2025</li>
                         </ul>
                         <p>Creators : @kazay_new & brown_tme</p>
                         <p>T.ME : @brown_link</p>
+                        <button class="btn btn-small btn-gray" id="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Выйти из аккаунта
+                        </button>
                     </div>
                 </div>
             </section>
@@ -226,4 +283,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
