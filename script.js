@@ -1,8 +1,217 @@
-// Инициализация при загрузке
+// ===== КЛЮЧЕВАЯ СИСТЕМА =====
+const VALID_KEYS = [
+    "KAZAY-2025-MULTITOOL",
+    "BROWN-TME-SUPERKEY", 
+    "ADMIN",
+    "TOKEN-GEN-PRO",
+    "MULTITOOL-VIP-ACCESS",
+    "SO2-INJECTOR-PRO",
+    "FAKE-LINK-GENERATOR",
+    "HACKTOOLS-2025",
+    "DISCORD-TOKEN-GEN",
+    "PREMIUM-ACCESS-CODE"
+];
+
+// ===== ПЕРЕМЕННЫЕ =====
+let attempts = 3;
+let isAuthenticated = false;
+let currentUserKey = '';
+let history = JSON.parse(localStorage.getItem('multitool_history') || '[]');
+let licenseExpireDate = '';
+
+// ===== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Запускаем прелоадер сайта
-    startSiteLoader();
+    // Проверяем сохраненную сессию
+    checkSavedSession();
+    
+    // Назначаем обработчики для ключевой системы
+    document.getElementById('submit-key-btn').addEventListener('click', checkKey);
+    document.getElementById('show-key-btn').addEventListener('click', toggleKeyVisibility);
+    document.getElementById('key-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkKey();
+        }
+    });
+    
+    // Обработчик выхода
+    document.getElementById('logout-btn').addEventListener('click', logout);
 });
+
+// ===== ПРОВЕРКА СОХРАНЕННОЙ СЕССИИ =====
+function checkSavedSession() {
+    const savedKey = localStorage.getItem('multitool_key');
+    const savedExpire = localStorage.getItem('multitool_expire');
+    
+    if (savedKey && savedExpire) {
+        // Проверяем не истекла ли лицензия
+        const now = new Date();
+        const expireDate = new Date(savedExpire);
+        
+        if (now < expireDate && VALID_KEYS.includes(savedKey)) {
+            // Сессия активна
+            currentUserKey = savedKey;
+            licenseExpireDate = savedExpire;
+            isAuthenticated = true;
+            
+            // Прячем ключевую систему и запускаем прелоадер
+            document.getElementById('key-system').style.display = 'none';
+            startSiteLoader();
+        } else {
+            // Сессия истекла
+            localStorage.removeItem('multitool_key');
+            localStorage.removeItem('multitool_expire');
+            updateAttemptsUI();
+        }
+    } else {
+        // Нет сохраненной сессии
+        updateAttemptsUI();
+    }
+}
+
+// ===== ПРОВЕРКА КЛЮЧА =====
+function checkKey() {
+    const keyInput = document.getElementById('key-input');
+    const key = keyInput.value.trim().toUpperCase();
+    const warning = document.getElementById('key-warning');
+    
+    if (!key) {
+        showKeyWarning('Введите ключ!');
+        return;
+    }
+    
+    if (VALID_KEYS.includes(key)) {
+        // Ключ верный
+        currentUserKey = key;
+        isAuthenticated = true;
+        
+        // Генерируем дату истечения (30 дней от текущей даты)
+        const expireDate = new Date();
+        expireDate.setDate(expireDate.getDate() + 30);
+        licenseExpireDate = expireDate.toISOString();
+        
+        // Сохраняем в localStorage
+        localStorage.setItem('multitool_key', key);
+        localStorage.setItem('multitool_expire', licenseExpireDate);
+        
+        // Скрываем ключевую систему
+        document.getElementById('key-system').style.display = 'none';
+        
+        // Запускаем прелоадер
+        startSiteLoader();
+        
+        // Сбрасываем попытки
+        attempts = 3;
+        updateAttemptsUI();
+    } else {
+        // Неверный ключ
+        attempts--;
+        updateAttemptsUI();
+        
+        if (attempts > 0) {
+            showKeyWarning(`Неверный ключ! Осталось попыток: ${attempts}`);
+            keyInput.value = '';
+            keyInput.focus();
+            
+            // Анимация встряски
+            keyInput.style.animation = 'shake 0.5s ease';
+            setTimeout(() => {
+                keyInput.style.animation = '';
+            }, 500);
+        } else {
+            // Попытки закончились
+            showKeyWarning('Доступ заблокирован! Свяжитесь с администратором.');
+            document.getElementById('submit-key-btn').disabled = true;
+            document.getElementById('key-input').disabled = true;
+            
+            // Блокировка на 5 минут
+            setTimeout(() => {
+                attempts = 3;
+                document.getElementById('submit-key-btn').disabled = false;
+                document.getElementById('key-input').disabled = false;
+                warning.classList.add('hidden');
+                updateAttemptsUI();
+            }, 5 * 60 * 1000); // 5 минут
+        }
+    }
+}
+
+// ===== ПОКАЗАТЬ/СКРЫТЬ КЛЮЧ =====
+function toggleKeyVisibility() {
+    const keyInput = document.getElementById('key-input');
+    const eyeBtn = document.getElementById('show-key-btn');
+    const eyeIcon = eyeBtn.querySelector('i');
+    
+    if (keyInput.type === 'password') {
+        keyInput.type = 'text';
+        eyeIcon.className = 'fas fa-eye-slash';
+    } else {
+        keyInput.type = 'password';
+        eyeIcon.className = 'fas fa-eye';
+    }
+}
+
+// ===== ОБНОВЛЕНИЕ UI ПОПЫТОК =====
+function updateAttemptsUI() {
+    const counter = document.querySelector('#attempts-counter span');
+    const progress = document.getElementById('attempts-progress');
+    
+    counter.textContent = attempts;
+    progress.style.width = `${(attempts / 3) * 100}%`;
+    
+    // Меняем цвет в зависимости от количества попыток
+    if (attempts === 3) {
+        progress.style.background = 'linear-gradient(90deg, #10b981, #8b5cf6)';
+    } else if (attempts === 2) {
+        progress.style.background = 'linear-gradient(90deg, #f59e0b, #f97316)';
+    } else {
+        progress.style.background = 'linear-gradient(90deg, #ef4444, #f97316)';
+    }
+}
+
+// ===== ПОКАЗАТЬ ПРЕДУПРЕЖДЕНИЕ О КЛЮЧЕ =====
+function showKeyWarning(message) {
+    const warning = document.getElementById('key-warning');
+    const warningText = warning.querySelector('span');
+    
+    warningText.textContent = message;
+    warning.classList.remove('hidden');
+    
+    // Автоматически скрыть через 5 секунд
+    setTimeout(() => {
+        warning.classList.add('hidden');
+    }, 5000);
+}
+
+// ===== ВЫХОД ИЗ СИСТЕМЫ =====
+function logout() {
+    if (confirm('Вы уверены, что хотите выйти? Все данные сессии будут удалены.')) {
+        // Очищаем localStorage
+        localStorage.removeItem('multitool_key');
+        localStorage.removeItem('multitool_expire');
+        
+        // Сбрасываем переменные
+        isAuthenticated = false;
+        currentUserKey = '';
+        attempts = 3;
+        
+        // Показываем ключевую систему
+        document.getElementById('key-system').style.display = 'flex';
+        document.getElementById('main-content').style.display = 'none';
+        
+        // Сбрасываем поля
+        document.getElementById('key-input').value = '';
+        document.getElementById('key-input').type = 'password';
+        document.getElementById('show-key-btn').innerHTML = '<i class="fas fa-eye"></i>';
+        document.getElementById('submit-key-btn').disabled = false;
+        document.getElementById('key-input').disabled = false;
+        
+        // Обновляем UI
+        updateAttemptsUI();
+        document.getElementById('key-warning').classList.add('hidden');
+        
+        showToast('Вы вышли из системы');
+    }
+}
 
 // ===== ПРЕЛОАДЕР САЙТА =====
 function startSiteLoader() {
@@ -11,12 +220,13 @@ function startSiteLoader() {
     const timer = document.getElementById('site-loader-timer');
     const mainContent = document.getElementById('main-content');
     
+    loader.classList.remove('hidden');
+    
     let progress = 0;
-    const steps = 4; // Количество шагов в анимации
-    const totalTime = 3500; // 3.5 секунды
+    const steps = 4;
+    const totalTime = 3500;
     const stepTime = totalTime / steps;
     
-    // Функция обновления шагов
     function updateSteps(currentStep) {
         const stepElements = document.querySelectorAll('.step');
         stepElements.forEach((step, index) => {
@@ -34,25 +244,20 @@ function startSiteLoader() {
         });
     }
     
-    // Инициализация первого шага
     updateSteps(0);
     
-    // Анимация загрузки
     const interval = setInterval(() => {
         progress += 100 / (totalTime / 100);
         progressBar.style.width = `${Math.min(progress, 100)}%`;
         timer.textContent = `${Math.min(Math.round(progress), 100)}%`;
         
-        // Обновляем шаги
         const currentStep = Math.floor(progress / (100 / steps));
         updateSteps(currentStep);
         
         if (progress >= 100) {
             clearInterval(interval);
             
-            // Задержка перед скрытием прелоадера
             setTimeout(() => {
-                // Анимация исчезновения прелоадера
                 loader.style.opacity = '0';
                 loader.style.transition = 'opacity 0.5s ease';
                 
@@ -70,6 +275,9 @@ function startSiteLoader() {
 
 // ===== ИНИЦИАЛИЗАЦИЯ ОСНОВНОГО ПРИЛОЖЕНИЯ =====
 function initMainApp() {
+    // Обновляем информацию о лицензии
+    updateLicenseInfo();
+    
     // Навигация
     const navButtons = document.querySelectorAll('.nav-btn');
     const pages = document.querySelectorAll('.page');
@@ -78,17 +286,12 @@ function initMainApp() {
         button.addEventListener('click', function() {
             const pageId = this.getAttribute('data-page');
             
-            // Снимаем активный класс со всех кнопок
             navButtons.forEach(btn => btn.classList.remove('active'));
-            // Добавляем активный класс на текущую кнопку
             this.classList.add('active');
             
-            // Скрываем все страницы
             pages.forEach(page => page.classList.remove('active'));
-            // Показываем выбранную страницу
             document.getElementById(pageId).classList.add('active');
             
-            // Если открыли историю - обновляем
             if (pageId === 'history-page') {
                 loadHistory();
             }
@@ -110,25 +313,37 @@ function initMainApp() {
     
     // Показываем приветственное уведомление
     setTimeout(() => {
-        showToast('Готово к работе');
+        showToast('Мультитул успешно загружен!');
     }, 500);
 }
 
-// ===== ПЕРЕМЕННЫЕ =====
-let history = JSON.parse(localStorage.getItem('multitool_history') || '[]');
+// ===== ОБНОВЛЕНИЕ ИНФОРМАЦИИ О ЛИЦЕНЗИИ =====
+function updateLicenseInfo() {
+    if (currentUserKey && licenseExpireDate) {
+        // Форматируем ключ для отображения
+        const displayKey = currentUserKey.replace(/(.{4})/g, '$1-').slice(0, -1);
+        
+        // Форматируем дату
+        const expireDate = new Date(licenseExpireDate);
+        const formattedDate = expireDate.toLocaleDateString('ru-RU', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+        
+        // Обновляем UI
+        document.getElementById('user-key').textContent = displayKey;
+        document.getElementById('expire-date').textContent = formattedDate;
+    }
+}
 
 // ===== STANDOFF =====
 function handleStandoff() {
     const text = document.getElementById('standoff-text').value.trim();
     const displayText = text || 'Запуск Standoff 2 с инжектом';
     
-    // Добавляем в историю
     addToHistory(displayText, 'standoff');
-    
-    // Показываем алерт успешного инжекта
     showInjectAlert();
-    
-    // Очищаем поле ввода
     document.getElementById('standoff-text').value = '';
 }
 
@@ -136,7 +351,6 @@ function showInjectAlert() {
     const alert = document.getElementById('inject-alert');
     const timeElement = document.getElementById('inject-time');
     
-    // Устанавливаем текущее время
     const now = new Date();
     timeElement.textContent = now.toLocaleTimeString('ru-RU', {
         hour: '2-digit',
@@ -144,21 +358,14 @@ function showInjectAlert() {
         second: '2-digit'
     });
     
-    // Показываем алерт
     alert.classList.remove('hidden');
-    
-    // Блокируем прокрутку
     document.body.style.overflow = 'hidden';
 }
 
 function closeAlert() {
     const alert = document.getElementById('inject-alert');
     alert.classList.add('hidden');
-    
-    // Восстанавливаем прокрутку
     document.body.style.overflow = 'auto';
-    
-    // Показываем уведомление
     showToast('Инжект завершен');
 }
 
@@ -167,7 +374,6 @@ function generateLink() {
     const platform = document.getElementById('platform-select').value;
     let link = '';
     
-    // Генерация случайной строки
     function randomString(length, chars) {
         let result = '';
         for (let i = 0; i < length; i++) {
@@ -195,8 +401,6 @@ function generateLink() {
     
     document.getElementById('generated-link').textContent = link;
     document.getElementById('link-result').classList.remove('hidden');
-    
-    // Добавляем в историю
     addToHistory(link, 'link', platform);
 }
 
@@ -212,18 +416,14 @@ function generateMD5() {
     let hash = '';
     
     if (!text.trim()) {
-        // Генерация случайного MD5 без нулей
-        const chars = '123456789abcdef'; // исключаем 0
-        // Первые символы - только буквы
+        const chars = '123456789abcdef';
         hash += 'abcd'[Math.floor(Math.random() * 4)];
         hash += 'ef'[Math.floor(Math.random() * 2)];
         
-        // Остальные - буквы и цифры (кроме 0)
         for (let i = 0; i < 26; i++) {
             hash += chars[Math.floor(Math.random() * chars.length)];
         }
     } else {
-        // Простой хэш для текста
         function simpleHash(str) {
             let hash = 0;
             for (let i = 0; i < str.length; i++) {
@@ -234,15 +434,12 @@ function generateMD5() {
             return Math.abs(hash);
         }
         
-        // Создаем уникальный хэш
         let hash1 = simpleHash(text + Date.now());
         let hash2 = simpleHash(text + 'salt');
         
-        // Комбинируем и убираем нули
         let combined = (hash1 * hash2).toString(16);
         combined = combined.replace(/0/g, '');
         
-        // Добавляем буквы если нужно
         while (combined.length < 32) {
             combined = 'abcdef'[Math.floor(Math.random() * 6)] + combined;
         }
@@ -253,10 +450,8 @@ function generateMD5() {
     document.getElementById('generated-md5').textContent = hash;
     document.getElementById('md5-result').classList.remove('hidden');
     
-    // Добавляем в историю
     const displayText = text ? `${text.substring(0, 15)}${text.length > 15 ? '...' : ''}` : 'случайный хэш';
     addToHistory(hash, 'md5', displayText);
-    
     document.getElementById('md5-text').value = '';
 }
 
@@ -335,7 +530,6 @@ function loadHistory() {
     
     historyList.innerHTML = html;
     
-    // Обработчики для копирования
     document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const text = this.getAttribute('data-text');
@@ -344,7 +538,6 @@ function loadHistory() {
         });
     });
     
-    // Обработчики для удаления
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const id = parseInt(this.getAttribute('data-id'));
@@ -370,7 +563,6 @@ function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
         console.log('Текст скопирован');
     }).catch(err => {
-        // Fallback для старых браузеров
         const textarea = document.createElement('textarea');
         textarea.value = text;
         document.body.appendChild(textarea);
@@ -391,4 +583,3 @@ function showToast(message) {
         toast.classList.add('hidden');
     }, 3000);
 }
-
