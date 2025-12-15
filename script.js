@@ -1,5 +1,75 @@
 // Инициализация при загрузке
 document.addEventListener('DOMContentLoaded', function() {
+    // Запускаем прелоадер сайта
+    startSiteLoader();
+});
+
+// ===== ПРЕЛОАДЕР САЙТА =====
+function startSiteLoader() {
+    const loader = document.getElementById('site-loader');
+    const progressBar = document.getElementById('site-progress');
+    const timer = document.getElementById('site-loader-timer');
+    const mainContent = document.getElementById('main-content');
+    
+    let progress = 0;
+    const steps = 4; // Количество шагов в анимации
+    const totalTime = 3500; // 3.5 секунды
+    const stepTime = totalTime / steps;
+    
+    // Функция обновления шагов
+    function updateSteps(currentStep) {
+        const stepElements = document.querySelectorAll('.step');
+        stepElements.forEach((step, index) => {
+            const icon = step.querySelector('i');
+            if (index < currentStep) {
+                step.classList.add('active');
+                icon.className = 'fas fa-check';
+            } else if (index === currentStep) {
+                step.classList.add('active');
+                icon.className = 'fas fa-spinner fa-spin';
+            } else {
+                step.classList.remove('active');
+                icon.className = 'fas fa-spinner';
+            }
+        });
+    }
+    
+    // Инициализация первого шага
+    updateSteps(0);
+    
+    // Анимация загрузки
+    const interval = setInterval(() => {
+        progress += 100 / (totalTime / 100);
+        progressBar.style.width = `${Math.min(progress, 100)}%`;
+        timer.textContent = `${Math.min(Math.round(progress), 100)}%`;
+        
+        // Обновляем шаги
+        const currentStep = Math.floor(progress / (100 / steps));
+        updateSteps(currentStep);
+        
+        if (progress >= 100) {
+            clearInterval(interval);
+            
+            // Задержка перед скрытием прелоадера
+            setTimeout(() => {
+                // Анимация исчезновения прелоадера
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.5s ease';
+                
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    mainContent.style.display = 'block';
+                    
+                    // Инициализируем основной функционал
+                    initMainApp();
+                }, 500);
+            }, 300);
+        }
+    }, 100);
+}
+
+// ===== ИНИЦИАЛИЗАЦИЯ ОСНОВНОГО ПРИЛОЖЕНИЯ =====
+function initMainApp() {
     // Навигация
     const navButtons = document.querySelectorAll('.nav-btn');
     const pages = document.querySelectorAll('.page');
@@ -37,12 +107,17 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('clear-history-btn').addEventListener('click', clearHistory);
     document.getElementById('refresh-history-btn').addEventListener('click', loadHistory);
     document.getElementById('close-alert-btn').addEventListener('click', closeAlert);
-});
+    
+    // Показываем приветственное уведомление
+    setTimeout(() => {
+        showToast('Мультитул успешно загружен!');
+    }, 500);
+}
 
 // ===== ПЕРЕМЕННЫЕ =====
 let history = JSON.parse(localStorage.getItem('multitool_history') || '[]');
 
-// ===== STANDOFF (ОБНОВЛЕННЫЙ) =====
+// ===== STANDOFF =====
 function handleStandoff() {
     const text = document.getElementById('standoff-text').value.trim();
     const displayText = text || 'Запуск Standoff 2 с инжектом';
@@ -131,7 +206,7 @@ function copyLink() {
     showToast('Ссылка скопирована!');
 }
 
-// ===== MD5 (БЕЗ НУЛЕЙ) =====
+// ===== MD5 =====
 function generateMD5() {
     const text = document.getElementById('md5-text').value;
     let hash = '';
