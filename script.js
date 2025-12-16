@@ -1,15 +1,5 @@
 // ===== КЛЮЧЕВАЯ СИСТЕМА =====
 const VALID_KEYS = [
-    "KAZAY-2025-MULTITOOL",
-    "BROWN-TME-SUPERKEY", 
-    "STANDOFF2-PREMIUM",
-    "TOKEN",
-    "MULTITOOL-VIP-ACCESS",
-    "SO2-INJECTOR-PRO",
-    "FAKE-LINK-GENERATOR",
-    "HACKTOOLS-2025",
-    "DISCORD-TOKEN-GEN",
-    "PREMIUM-ACCESS-CODE",
     "BRAIN-A7F9K2P5Q8R3S6T1U4V7WX",
     "BRAIN-X9Z2B4D6C8F0G1H3J5L7M8",
     "BRAIN-N1Q3P5R7T9V2X4Z6B8D0F2",
@@ -763,4 +753,5 @@ function showToast(message) {
         }, 3000);
     }
 }
+
 
