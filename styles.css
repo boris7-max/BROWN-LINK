@@ -5,6 +5,61 @@
     box-sizing: border-box;
 }
 
+/* ===== ФОН СО ЗВЕЗДАМИ ===== */
+#starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.star {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    animation: starFall linear infinite, starTwinkle ease-in-out infinite;
+}
+
+.star.small {
+    width: 1px;
+    height: 1px;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.star.medium {
+    width: 1.5px;
+    height: 1.5px;
+    box-shadow: 0 0 1.5px rgba(255, 255, 255, 0.9);
+}
+
+.star.large {
+    width: 2px;
+    height: 2px;
+    box-shadow: 0 0 2px rgba(255, 255, 255, 1);
+}
+
+@keyframes starFall {
+    from {
+        transform: translateY(-100px) translateX(0);
+    }
+    to {
+        transform: translateY(100vh) translateX(var(--direction, 0px));
+    }
+}
+
+@keyframes starTwinkle {
+    0%, 100% { 
+        opacity: 0.3; 
+    }
+    50% { 
+        opacity: 0.9; 
+    }
+}
+
 /* ===== СИСТЕМА КЛЮЧЕЙ ===== */
 .key-system-overlay {
     position: fixed;
