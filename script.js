@@ -1,6 +1,6 @@
 // ===== КЛЮЧЕВАЯ СИСТЕМА =====
 const VALID_KEYS = [
-    "SMIXANMIN",
+    "SMIXADMIN",
     "ME1SON1ADMIN",
     "BRAIN-A7F9K2P5Q8R3S6T1U4V7WX",
     "BRAIN-X9Z2B4D6C8F0G1H3J5L7M8",
@@ -818,3 +818,4 @@ function showToast(message) {
         }, 3000);
     }
 }
+
