@@ -1,5 +1,7 @@
 // ===== КЛЮЧЕВАЯ СИСТЕМА =====
 const VALID_KEYS = [
+    "SMIXANMIN",
+    "ME1SON1ADMIN",
     "BRAIN-A7F9K2P5Q8R3S6T1U4V7WX",
     "BRAIN-X9Z2B4D6C8F0G1H3J5L7M8",
     "BRAIN-N1Q3P5R7T9V2X4Z6B8D0F2",
@@ -102,8 +104,70 @@ let currentUserKey = '';
 let history = JSON.parse(localStorage.getItem('multitool_history') || '[]');
 let licenseExpireDate = '';
 
+// ===== СОЗДАНИЕ ЗВЕЗДНОГО ПОЛЯ =====
+function createStarfield() {
+    const starfield = document.getElementById('starfield');
+    if (!starfield) return;
+    
+    const starCount = 80; // Меньше звезд для легкого эффекта
+    
+    // Очищаем старые звезды (если есть)
+    starfield.innerHTML = '';
+    
+    for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        
+        // Случайный размер звезды (все маленькие)
+        const size = Math.random();
+        let starSize, starWidth;
+        
+        if (size < 0.7) {
+            starSize = 'small';
+            starWidth = 1;
+        } else if (size < 0.9) {
+            starSize = 'medium';
+            starWidth = 1.5;
+        } else {
+            starSize = 'large';
+            starWidth = 2;
+        }
+        
+        // Случайная позиция
+        const left = Math.random() * 100;
+        const startTop = Math.random() * 100;
+        
+        // Случайная скорость падения (очень медленно)
+        const duration = Math.random() * 20 + 40; // 40-60 секунд
+        const delay = Math.random() * 15; // Большая задержка
+        
+        // Случайная частота мерцания
+        const twinkleDuration = Math.random() * 4 + 3; // 3-7 секунд
+        
+        // Случайное направление падения
+        const direction = Math.random() * 8 - 4; // -4px до +4px
+        
+        star.className = `star ${starSize}`;
+        star.style.left = `${left}%`;
+        star.style.top = `${startTop}%`;
+        star.style.width = `${starWidth}px`;
+        star.style.height = `${starWidth}px`;
+        star.style.setProperty('--direction', `${direction}px`);
+        star.style.animation = `starFall ${duration}s linear ${delay}s infinite, starTwinkle ${twinkleDuration}s ease-in-out ${delay}s infinite`;
+        
+        starfield.appendChild(star);
+    }
+}
+
 // ===== ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ =====
 document.addEventListener('DOMContentLoaded', function() {
+    // Создаем звездное поле
+    createStarfield();
+    
+    // Обновляем звезды каждую минуту для разнообразия
+    setInterval(() => {
+        createStarfield();
+    }, 60000);
+    
     // Проверяем сохраненную сессию
     checkSavedSession();
     
@@ -314,6 +378,7 @@ function logout() {
         // Показываем ключевую систему
         document.getElementById('key-system').style.display = 'flex';
         document.getElementById('main-content').style.display = 'none';
+        document.getElementById('site-loader').style.display = 'none';
         
         // Сбрасываем поля
         const keyInput = document.getElementById('key-input');
@@ -753,5 +818,3 @@ function showToast(message) {
         }, 3000);
     }
 }
-
-
